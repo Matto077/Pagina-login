@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Registrazione</title>
+</head>
+<body>
+  <h2>Registrazione</h2>
+  <form id="registerForm">
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="pw" placeholder="Password" required>
+    <select id="dbType">
+      <option value="mysql">MySQL</option>
+      <option value="postgres">Postgres</option>
+    </select>
+    <button type="submit">Registrati</button>
+  </form>
+
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="text" id="loginUsername" placeholder="Username" required>
+    <input type="password" id="loginPw" placeholder="Password" required>
+    <select id="loginDbType">
+      <option value="mysql">MySQL</option>
+      <option value="postgres">Postgres</option>
+    </select>
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

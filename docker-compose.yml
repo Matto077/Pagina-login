@@ -1,0 +1,60 @@
+services:
+  app:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db_mysql
+      - db_postgres
+    environment:
+      - MYSQL_HOST=db_mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=pass123
+      - MYSQL_DATABASE=Mysql
+      - POSTGRES_HOST=db_postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass123
+      - POSTGRES_DB=postgresdb
+    restart: always
+
+  db_mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: pass123
+      MYSQL_DATABASE: Mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+  db_postgres:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: postgresdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok_http
+    depends_on:
+      - app
+    command: http app:3000
+    environment:
+      NGROK_AUTHTOKEN: 38CJ3kqORpNqtujTEGqwbBsvi53_3RpJVMdmidaFNWSHjhijd
+    ports:
+      - "4040:4040"
+    restart: always
+
+volumes:
+  mysql_data:
+  postgres_data:
