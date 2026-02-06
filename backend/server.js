@@ -1,3 +1,4 @@
+// ================= SERVER =================
 const express = require('express');
 const mysql = require('mysql2');
 const { Client } = require('pg');
@@ -16,8 +17,8 @@ app.use(bodyParser.json());
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'mattiagrandi2009@gmail.com', // la tua Gmail
-    pass: 'cyuogitjsekvyfvt'           // password app Gmail
+    user: 'mattiagrandi2009@gmail.com', 
+    pass: 'cyuogitjsekvyfvt'
   }
 });
 
@@ -97,7 +98,6 @@ app.post('/register', async (req, res) => {
   const token = uuidv4();
 
   const sendMail = async (userEmail, token) => {
-    // QUI ho sostituito localhost con il tuo link ngrok
     const link = `https://unnimble-nonserviceably-knox.ngrok-free.dev/activate/${token}`;
     try {
       await transporter.sendMail({
@@ -170,12 +170,16 @@ app.get('/activate/:token', async (req, res) => {
 
 // ================= LOGIN =================
 app.post('/login', (req, res) => {
-  const { username, password, dbType } = req.body;
+  const { usernameOrEmail, password, dbType } = req.body;
+
+  if (!usernameOrEmail || !password) {
+    return res.status(400).json({ message: "Inserisci username/email e password" });
+  }
 
   if (dbType === 'mysql') {
     db.query(
-      `SELECT * FROM utenti WHERE username=? AND password=? AND active=true`,
-      [username, password],
+      `SELECT * FROM utenti WHERE (username=? OR email=?) AND password=? AND active=true`,
+      [usernameOrEmail, usernameOrEmail, password],
       (err, r) => {
         if (err) {
           console.log("Errore login MySQL:", err);
@@ -187,8 +191,8 @@ app.post('/login', (req, res) => {
     );
   } else if (dbType === 'postgres') {
     pgClient.query(
-      `SELECT * FROM utenti WHERE username=$1 AND password=$2 AND active=true`,
-      [username, password],
+      `SELECT * FROM utenti WHERE (username=$1 OR email=$1) AND password=$2 AND active=true`,
+      [usernameOrEmail, password],
       (err, r) => {
         if (err) {
           console.log("Errore login Postgres:", err);
@@ -196,7 +200,6 @@ app.post('/login', (req, res) => {
         }
         if (r.rows.length > 0) res.json({ message: 'Login OK (Postgres)' });
         else res.status(401).json({ message: 'Account non attivo o dati errati' });
-        document.getElementById('pw').value = '';
       }
     );
   } else {
