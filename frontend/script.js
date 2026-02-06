@@ -35,12 +35,12 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const username = document.getElementById('loginUsername').value;
+  const usernameOrEmail = document.getElementById('loginUsername').value;
   const password = document.getElementById('loginPw').value;
   const dbType = document.getElementById('loginDbType').value;
 
-  if (!username || !password) {
-    alert('Inserisci username e password');
+  if (!usernameOrEmail || !password) {
+    alert('Inserisci username/email e password');
     return;
   }
 
@@ -48,7 +48,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const res = await fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, dbType })
+      body: JSON.stringify({ usernameOrEmail, password, dbType })
     });
 
     const data = await res.json();
@@ -57,4 +57,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     console.error(err);
     alert('Errore login');
   }
+
+  document.getElementById('loginPw').value = '';
 });

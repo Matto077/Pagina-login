@@ -50,7 +50,7 @@ services:
       - app
     command: http app:3000
     environment:
-      NGROK_AUTHTOKEN: 38CJ3kqORpNqtujTEGqwbBsvi53_3RpJVMdmidaFNWSHjhijd
+      NGROK_AUTHTOKEN: TUO_AUTHOKEN_NGROK
     ports:
       - "4040:4040"
     restart: always
